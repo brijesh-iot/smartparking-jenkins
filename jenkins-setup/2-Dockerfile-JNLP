@@ -1,0 +1,21 @@
+FROM plugandtrade/jenkins-jnlp-dind-slave
+
+USER root
+
+RUN apt-get update && apt-get install -y maven
+RUN apt-get install unzip -y
+
+### Installing Terraform ###
+#COPY terraform_0.12.26_linux_amd64.zip .
+RUN curl "https://releases.hashicorp.com/terraform/0.12.26/terraform_0.12.26_linux_amd64.zip" -o "terraform.zip"
+RUN unzip terraform.zip
+RUN mv terraform /usr/local/bin/terraform
+RUN terraform version
+
+### AWS CLI Install ###
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN ./aws/install
+RUN aws --version
+
+USER jenkins
